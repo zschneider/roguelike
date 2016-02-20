@@ -27,10 +27,14 @@ Level.prototype.generate_room_tree = function() {
     // determine number of doors for starting room
     doors = this._get_random_number_of_doors(0);
     // determine which cardinals the doors point in
+
+    // save some debug info
+    start_room.save_debug_info(doors, 0);
+
     rooms_to_be_branched = this._create_connected_rooms(doors, start_room);
     this._continue_branching_rooms(rooms_to_be_branched, 1);
     this.assign_escape_room();
-    this.assign_monsters();
+    if (DEBUG_SPAWN_MONSTERS) this.assign_monsters();
 }
 
 // ----------- Procedural Generation -----------
@@ -39,15 +43,22 @@ Level.prototype.generate_room_tree = function() {
 Level.prototype._continue_branching_rooms = function(rooms_to_be_explored, branch_level) {
     var curr_door_probs = DOOR_PROBS[branch_level];
     if (curr_door_probs == null) {
+        // Save some debug information
+        for (var i = 0; i < rooms_to_be_explored.length; i++) {
+            var room = rooms_to_be_explored[i];
+            room.save_debug_info(1, branch_level);
+        } 
         return;
     }
     var rooms_to_be_branched = [];
     for (var i = 0; i < rooms_to_be_explored.length; i++) {
-        room = rooms_to_be_explored[i];
-        doors = this._get_random_number_of_doors(branch_level);
+        var room = rooms_to_be_explored[i];
+        var doors = this._get_random_number_of_doors(branch_level);
+        room.door_prob = doors;
+        room.branch_level = branch_level;
         // every room already has one door
-        new_rooms = this._create_connected_rooms(doors, room);
-        rooms_to_be_branched.concat(new_rooms);
+        var new_rooms = this._create_connected_rooms(doors, room);
+        rooms_to_be_branched = rooms_to_be_branched.concat(new_rooms);
     }
     this._continue_branching_rooms(rooms_to_be_branched, branch_level + 1);
 }
@@ -56,7 +67,9 @@ Level.prototype._continue_branching_rooms = function(rooms_to_be_explored, branc
 Level.prototype._create_connected_rooms = function(doors, old_room) {
     var cardinals = [NORTH, SOUTH, EAST, WEST];
     var rooms_to_be_branched = [];
-    for (i = 0; i < doors; i++) {
+
+
+    for (i = 0; i < doors && cardinals.length != 0; i++) {
         var r = getRandomInt(0, 3 - i);
         var door_to_be = cardinals[r];
         cardinals.splice(r, 1);
@@ -65,6 +78,9 @@ Level.prototype._create_connected_rooms = function(doors, old_room) {
             new_room = this.add_room(index);
             this._set_room_relationships(door_to_be, new_room, old_room)
             rooms_to_be_branched.push(new_room);
+        }
+        else {
+            i -= 1;
         }    
     }
     return rooms_to_be_branched;
@@ -162,6 +178,7 @@ Level.prototype.add_start_room = function() {
 
 Level.prototype.add_room = function(index) {
     new_room = new Room(this.ctx);
+    if (DEBUG_SHOW_ALL_ROOMS) new_room.visible = true;
     new_room.level_room_index = index;
     new_room.set_size_and_placement(GRID_DIMENSIONS[new_room.level_room_index]);
     this.room_grid[index] = new_room;
@@ -292,6 +309,7 @@ Level.prototype.draw = function () {
     this._draw_border();
     this._draw_ui();
     this._draw_monsters();
+    this.player.draw();
 }
 
 Level.prototype._draw_ui = function() {

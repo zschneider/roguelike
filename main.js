@@ -36,8 +36,9 @@ function game_loop () {
 
     current_level.player.listen();
     current_level.resolve_monsters();
+
+    // Draw
     current_level.draw();
-    current_level.player.draw();
 
     if (!current_level.player.dead) {
         requestAnimationFrame(game_loop);

@@ -2,15 +2,12 @@
  
 
 // DOOR PROBABILITIES
-// 60% 4 doors, 20% 3 doors, 10% 2 doors at branch 0
-// 20% 4 doors, 10% 3 doors, 50% 2 doors, 20% 1 door at branch 1
-// 5% 4 doors, 5% 3 doors, 50% 2 doors, 40% 1 door at branch 2
-// 1% 4 doors, 5% 3 doors, 10% 2 doors, 84% 1 door at branch 3
-// 100% 1 door at branch 4
+// Make sure 0% chance of one door at branch_0,
+// Make sure 100% chance of one door at branch_4
 var BRANCH_0 = [0, 10, 30, 100]
-var BRANCH_1 = [20, 70, 80, 100]
-var BRANCH_2 = [40, 90, 95, 100]
-var BRANCH_3 = [84, 94, 99, 100]
+var BRANCH_1 = [10, 25, 50, 100]
+var BRANCH_2 = [40, 70, 90, 100]
+var BRANCH_3 = [50, 75, 95, 100]
 var BRANCH_4 = [100, 100, 100, 100]
 
 var DOOR_PROBS = [BRANCH_0, BRANCH_1, BRANCH_2, BRANCH_3, BRANCH_4]
@@ -49,3 +46,8 @@ var E_WIZARD = "wizard";
 
 var MONSTER_PROBS = [20, 50, 90, 100];
 var MONSTER_TYPES = [BAT, TROLL, GOBLIN, E_WIZARD];
+
+// Debug
+var DEBUG_SPAWN_MONSTERS = false;
+var DEBUG_SHOW_ALL_ROOMS = true;
+var DEBUG_SHOW_ROOM_INFO= true;

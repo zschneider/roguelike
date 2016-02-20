@@ -10,6 +10,10 @@ var Room = function(ctx) {
     this.location = null;
     this.door_num = 0;
 
+    // debug info
+    this.door_prob = null;
+    this.branch_level = null;
+
     // room pointers
     this.north = null;
     this.south = null;
@@ -45,6 +49,11 @@ Room.prototype.set_size_and_placement = function(room_holder_dimensions) {
 
 Room.prototype.add_escape = function() {
     this.is_escape_room = true;
+}
+
+Room.prototype.save_debug_info = function(door_prob, branch_level) {
+    this.door_prob = door_prob;
+    this.branch_level = branch_level;
 }
 
 
@@ -184,5 +193,14 @@ Room.prototype.draw = function() {
         var middle = this.get_middle_of_room();
         var args = convert_grid_location_into_filltext_args(middle[0], middle[1]);
         this.ctx.fillText('O', args[0], args[1]);
+    }
+
+    if (DEBUG_SHOW_ROOM_INFO) {
+        var location = this.location;
+        var args = convert_grid_location_into_filltext_args(location[0]+1, location[1]+1);
+        this.ctx.fillText("DP:" + this.door_prob, args[0], args[1]); //doors based on DOOR_PROBABILITY
+        args = convert_grid_location_into_filltext_args(location[0]+1, location[1]+3);
+        this.ctx.fillText("BL:" + this.branch_level, args[0], args[1]); //branch level
+
     }
 }
