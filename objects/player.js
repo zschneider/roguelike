@@ -1,3 +1,7 @@
+// ----------- Player Object -----------
+
+// Represents player. Handles input, movement, combat, death, etc.
+
 var Player = function(ctx) {
     this.health = 100;
     this.mana = 100;
@@ -12,6 +16,8 @@ var Player = function(ctx) {
     this.dead = false;
 }
 
+// ----------- User Input -----------
+
 Player.prototype.listen = function() {
     key = Key.last_key_pressed;
     if (key != null) {
@@ -25,6 +31,8 @@ Player.prototype.listen = function() {
         Key.last_key_pressed = null;
     }
 }
+
+// ----------- Movement -----------
 
 Player.prototype.move_north = function() {
     var new_loc = [this.location[0], this.location[1] - 1];
@@ -67,6 +75,8 @@ Player.prototype.attempt_move = function(new_loc) {
     }
 }
 
+// ----------- Combat -----------
+
 Player.prototype.take_damage = function(attack) {
     this.health -= attack;
     if (this.health <= 0) {
@@ -78,6 +88,8 @@ Player.prototype.die = function() {
     this.health = 0;
     this.dead = true;
 }
+
+// ----------- Draw -----------
 
 Player.prototype.draw = function () {
     var args = convert_grid_location_into_filltext_args(this.location[0], this.location[1]);

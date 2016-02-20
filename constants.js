@@ -1,6 +1,5 @@
-// Constants 
-
-// 80 x 60
+// ----------- Game Constants -----------
+ 
 
 // DOOR PROBABILITIES
 // 60% 4 doors, 20% 3 doors, 10% 2 doors at branch 0
@@ -41,10 +40,7 @@ var MIN_ROOM_Y = 3;
 var MAX_ROOM_Y = HOLDER_SIZE_Y-2;
 
 
-// // ROOM TYPE PROBABILITIES
-// // NOTHING, MONSTER ROOM, STORE
-// var ROOM_TYPE_PROBS = [30, 95, 100];
-
+// Monster Constants
 // BAT, TROLL, GOBLIN, EVIL WIZARD
 var BAT = "bat";
 var TROLL = "troll";

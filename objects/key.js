@@ -1,3 +1,8 @@
+// ----------- Key Object -----------
+
+// The key class stores the most recently pressed key.
+// We examine last_key_pressed on each loop.
+
 var Key = {
   last_key_pressed: null,
 

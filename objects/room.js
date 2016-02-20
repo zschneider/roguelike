@@ -1,3 +1,6 @@
+// ----------- Room Object -----------
+
+// Represents and draws rooms on the level map.
 
 var Room = function(ctx) {
     this.ctx = ctx;
@@ -20,15 +23,13 @@ var Room = function(ctx) {
     this.is_start_room = false;
 }
 
+// ----------- Creation -----------
+
 Room.prototype.set_random_size = function() {
     var size = [2];
     size[0] = getRandomInt(MIN_ROOM_X, MAX_ROOM_X);
     size[1] = getRandomInt(MIN_ROOM_Y, MAX_ROOM_Y);
     this.size = size;
-}
-
-Room.prototype.add_escape = function() {
-    this.is_escape_room = true;
 }
 
 Room.prototype.set_size_and_placement = function(room_holder_dimensions) {
@@ -41,6 +42,13 @@ Room.prototype.set_size_and_placement = function(room_holder_dimensions) {
                                Math.min(room_holder_dimensions[1] + MAX_ROOM_Y/2 - 1, room_holder_dimensions[1] + MAX_ROOM_Y - (this.size[1])));
     this.location = location;
 }
+
+Room.prototype.add_escape = function() {
+    this.is_escape_room = true;
+}
+
+
+// ----------- Information -----------
 
 Room.prototype.get_middle_of_room = function() {
     return [this.location[0] + Math.floor(this.size[0]/2) + 1, this.location[1] + Math.floor(this.size[1]/2) + 1];
@@ -89,6 +97,10 @@ Room.prototype.is_door = function(loc) {
     }
     return null;
 }
+
+// ----------- Draw -----------
+
+// TODO: break this up into smaller functions.
 
 Room.prototype.draw = function() {
     if (!this.visible) {

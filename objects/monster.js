@@ -1,3 +1,7 @@
+// ----------- Monster Object -----------
+
+// Represents enemies and handles combat, movement, and health.
+
 var Monster = function(ctx, level) {
     this.ctx = ctx;
     this.health = 100;
@@ -9,8 +13,11 @@ var Monster = function(ctx, level) {
     this.level = level;
 }
 
+// ----------- Creation -----------
+
 Monster.prototype.randomly_setup = function(room) {
     this.current_room = room;
+    // TODO: get random location in room
     this.location = this.current_room.get_middle_of_room();
     var r = getRandomInt(1, 100);
     for (var i = 0; i < MONSTER_PROBS.length; i++) {
@@ -21,8 +28,10 @@ Monster.prototype.randomly_setup = function(room) {
     }
 }
 
+// ----------- Movement -----------
+
 Monster.prototype.move_towards = function(loc) {
-    // idea, abs(x - x), abs(y - y), reduce by greater of the two
+    // idea: abs(x - x), abs(y - y), reduce by greater of the two
     var x_diff = Math.abs(loc[0] - this.location[0]);
     var y_diff = Math.abs(loc[1] - this.location[1]);
     if (x_diff >= y_diff) {
@@ -51,6 +60,7 @@ Monster.prototype.attempt_move = function(loc) {
     }
 }
 
+// ----------- Combat -----------
 
 Monster.prototype.take_damage = function(attack) {
     this.health -= attack;
@@ -66,6 +76,8 @@ Monster.prototype.die = function() {
         }
     }
 }
+
+// ----------- Draw -----------
 
 Monster.prototype.draw = function() {
     var args = convert_grid_location_into_filltext_args(this.location[0], this.location[1]);
