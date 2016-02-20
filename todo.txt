@@ -1,0 +1,36 @@
+Easy todos:
+
+randomize start placement for monsters
+
+make monster movement near player better/randomized
+
+toolbar representing battle?
+
+move, physical attack, magic attack, run
+
+BATTLE SCREEN
+
+
+ ------------------------
+|                        |
+|                        |
+|                        |
+|                        |
+|                        |
+ ------------------------
+
+
+
+
+
+
+
+
+
+Later:
+inventory
+combat
+
+late stages:
+monster db
+treasure db
