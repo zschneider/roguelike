@@ -2,7 +2,6 @@
 // Global varaible container for the current level. 
 var current_level = null;
 
-
 // ----------- Initialization and Game Loop -----------
 
 
@@ -25,20 +24,30 @@ function generate_first_level_and_spawn_player(c, ctx) {
     current_level = first_level;
 }
 
-// Main game loop.
+// Main game loop. TODO: move state tracking to "level.update();"
 function game_loop () {
     clear(current_level.c, current_level.ctx);
 
     // DEBUG TOOLS
-    //draw_grid(c, ctx);
+    //draw_grid(current_level.c, current_level.ctx);
     //draw_room_holder_grid(current_level.c, current_level.ctx);
     //draw_ui_line(c, ctx);
 
-    current_level.player.listen();
-    current_level.resolve_monsters();
+    if (current_level.battle != null) {
+        if (current_level.battle.intro_transition) {
+            current_level.battle.draw_intro();
+        }
+        else {
+            current_level.battle.draw();
+        }
+    }
+    else {
+        current_level.player.listen();
+        current_level.resolve_monsters();
 
-    // Draw
-    current_level.draw();
+        // Draw
+        current_level.draw();
+    }
 
     if (!current_level.player.dead) {
         requestAnimationFrame(game_loop);
@@ -62,6 +71,10 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+//http://bitstructures.com/2007/11/javascript-method-callbacks.html
+function bind(toObject, methodName){
+    return function(){toObject[methodName]()}
+}
 
 // ----------- Debug tools -----------
 

@@ -39,9 +39,20 @@ Monster.prototype.move_towards = function(loc) {
         if (loc[0] > this.location[0]) this.attempt_move([this.location[0]+1, this.location[1]]);
         else this.attempt_move([this.location[0]-1, this.location[1]]);
     }
+    else if (x_diff == y_diff) {
+        var rand = getRandomInt(0,1);
+        if (rand == 0) {
+            if (loc[1] > this.location[1]) this.attempt_move([this.location[0], this.location[1]+1]);
+            else this.attempt_move([this.location[0], this.location[1]-1]);
+        }
+        else {
+            if (loc[0] > this.location[0]) this.attempt_move([this.location[0]+1, this.location[1]]);
+            else this.attempt_move([this.location[0]-1, this.location[1]]);
+        }        
+    }
     else {
         if (loc[1] > this.location[1]) this.attempt_move([this.location[0], this.location[1]+1]);
-        else this.attempt_move([this.location[0], this.location[1]-1]);        
+        else this.attempt_move([this.location[0], this.location[1]-1]);   
     }
 }
 
@@ -49,11 +60,10 @@ Monster.prototype.attempt_move = function(loc) {
     possible_room = this.current_room.is_door(loc);
     if (possible_room != null) {
         this.current_room = possible_room.room;
-        this.location = possible_room.location;
     }
     else if (loc[0] == this.level.player.location[0] &&
              loc[1] == this.level.player.location[1]) {
-        null;
+        this.level.start_battle(this);
     }
     else if (!this.current_room.is_wall(loc)) {
         this.location = loc;

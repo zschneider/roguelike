@@ -1,5 +1,4 @@
 // ----------- Game Constants -----------
- 
 
 // DOOR PROBABILITIES
 // Make sure 0% chance of one door at branch_0,
@@ -48,6 +47,26 @@ var MONSTER_PROBS = [20, 50, 90, 100];
 var MONSTER_TYPES = [BAT, TROLL, GOBLIN, E_WIZARD];
 
 // Debug
-var DEBUG_SPAWN_MONSTERS = false;
-var DEBUG_SHOW_ALL_ROOMS = true;
-var DEBUG_SHOW_ROOM_INFO= true;
+var DEBUG_SPAWN_MONSTERS = true;
+var DEBUG_SHOW_ALL_ROOMS = false;
+var DEBUG_SHOW_ROOM_INFO= false;
+
+var BATTLE_TEXT = 
+"                              (            ____ \n" +
+"   (     (       *   )  *   ) )\\ )        |   / \n" +
+" ( )\\    )\\    ` )  /(` )  /((()/(  (     |  /  \n" +
+" )((_)((((_)(   ( )(_))( )(_))/(_)) )\\    | /   \n" +
+"((_)_  )\\ _ )\\ (_(_())(_(_())(_))  ((_)   |/    \n" +
+" | _ ) (_)_\\(_)|_   _||_   _|| |   | __|  /     \n" +
+" | _ \\  / _ \\    | |    | |  | |__ | _|  /\\     \n" +
+" |___/ /_/ \\_\\   |_|    |_|  |____||___|(_)    \n";
+// var BATTLE_TEXT = 
+// "  ____        _   _   _      _  \n" +
+// " | __ )  __ _| |_| |_| | ___| | \n" +
+// " |  _ \\ / _` | __| __| |/ _ \\ | \n" +
+// " | |_) | (_| | |_| |_| |  __/_| \n" +
+// " |____/ \\__,_|\\__|\\__|_|\\___(_) \n" +
+// "                                ";
+var BATTLE_INTRO_TIME = 3000;
+var BATTLE_TEXT_WIDTH = 30;
+                                                

@@ -11,6 +11,7 @@ var Level = function(c, ctx, player) {
     this.player.level = this;
     this.monsters = [];
     this.player_attempted_move = false;
+    this.battle = null;
 }
 
 // ----------- Initialization ----------- 
@@ -267,22 +268,8 @@ Level.prototype.convert_cardinal_into_index = function(direction, index) {
 Level.prototype.resolve_monsters = function() {
     if (this.player_attempted_move) {
         for (var i = 0; i < this.monsters.length; i++) {
-            // try to move the monster towards the player IF VISIBLE
-            // if next to player, attack
             if (this.monsters[i].current_room.visible) {
-                if (this.next_to_player(this.monsters[i])) {
-                    this.player.take_damage(this.monsters[i].attack_strength);
-                }
-                else { // move towards player
-                    // if in same room as monster, move towards player
-                    // if in differnt room, move towards nearest exit
-                    if (this.player.current_room == this.monsters[i].current_room) {
-                        this.monsters[i].move_towards(this.player.location);
-                    }
-                    else {
-                        // move towards nearest exit.
-                    }
-                }
+                this.monsters[i].move_towards(this.player.location);
             }
         }
         this.player_attempted_move = false;
@@ -296,6 +283,12 @@ Level.prototype.level_up = function () {
     temp_level.setup_player_position();
     // global variable
     current_level = temp_level;
+}
+
+// Creates a battle object and passes game loop control to it.
+Level.prototype.start_battle = function (monster) {
+    var battle = new Battle(this.c, this.ctx, monster, this);
+    this.battle = battle;
 }
 
 // ----------- Draw -----------
