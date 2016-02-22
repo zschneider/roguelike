@@ -1,10 +1,11 @@
-var Battle = function(c, ctx, monster, level) {
+var Battle = function(c, ctx, room, monster, level) {
     // need room for dimensions
     // need new game loop
     this.c = c;
     this.ctx = ctx;
     this.monster = monster;
     this.level = level;
+    this.room = room;
 
     this.battle_on = true;
     this.intro_transition = true;
@@ -12,14 +13,26 @@ var Battle = function(c, ctx, monster, level) {
     this.text_location = [-30, 1];
     this.intro_start_time = Date.now();
     this.intro_current_time = Date.now();
+
+    this.selected = 0;
+    this.menu = MENU_OPTIONS;
 }
 
+Battle.prototype.move_menu_up = function() {
+    if (this.selected - 1 <= -1) {
+        this.selected = this.menu.length - 1;
+    }
+    else {
+        this.selected -= 1;
+    }
+}
 
-Battle.prototype.battle_loop = function() {
-    while (this.battle_on) {
-        //clear(this.c, this.ctx);
-        // this.draw();
-        // requestAnimationFrame(this.battle_loop);
+Battle.prototype.move_menu_down = function() {
+    if (this.selected + 1 >= this.menu.length) {
+        this.selected = 0;
+    }
+    else {
+        this.selected += 1;
     }
 }
 
@@ -27,9 +40,22 @@ Battle.prototype.draw = function() {
     this.level._draw_border();
     this.level._draw_ui();
     this._draw_battle_text();
+    this._draw_battle_border();
+    this._draw_ui();
+}
+
+Battle.prototype.listen = function() {
+    key = Key.last_key_pressed;
+    if (key != null) {
+        if (key == Key.UP) this.move_menu_up();
+        if (key == Key.DOWN) this.move_menu_down();
+
+        Key.last_key_pressed = null;
+    }
 }
 
 Battle.prototype.draw_intro = function() {
+    // TODO: move the text_location to appropriate value given time into BATTLE_INTRO_TIME
     if (this.text_location[0] <= ((this.c.width/10)/2 - BATTLE_TEXT_WIDTH/2)) {
         this.text_location = [this.text_location[0] + 1, this.text_location[1]];
     }
@@ -63,5 +89,76 @@ Battle.prototype._draw_battle_text = function() {
 }
 
 Battle.prototype._draw_battle_border = function() {
+    for (i = 1; i < this.c.width/10 - 1; i += 1) {
+        var args = convert_grid_location_into_filltext_args(i, 10);
+        this.ctx.fillText('-', args[0], args[1]);
+        args = convert_grid_location_into_filltext_args(i, 40);
+        this.ctx.fillText('-', args[0], args[1]);
+    }
+}
+
+Battle.prototype._draw_ui = function() {
+    this._draw_menu();
+    this._draw_zoomed_room();
+    this._draw_monster_info();
+    this._draw_agents_on_map();
+}
+
+Battle.prototype._draw_menu = function() {
+    this.ctx.font = BATTLE_MENU_FONT;
+    var args = convert_grid_location_into_filltext_args(5, 12);
+    this.ctx.fillText('ACTION MENU', args[0], args[1]);
+    for (var i = 0; i < this.menu.length; i++) {
+        if (i == this.selected) {
+            var selected_args = convert_grid_location_into_filltext_args(2, 15 + (i*2));
+            this.ctx.fillText('>', selected_args[0], selected_args[1]);
+        }
+        args = convert_grid_location_into_filltext_args(3, 15 + (i*2));
+        this.ctx.fillText(this.menu[i], args[0], args[1]);
+    }
+    this.ctx.font = GAME_FONT;
+    for (i = 1; i < 30; i++) {
+        args = convert_grid_location_into_filltext_args(20, i+10);
+        this.ctx.fillText('I', args[0], args[1]);
+    }
+    for (i = 1; i < 20; i++) {
+        args = convert_grid_location_into_filltext_args(i, 13);
+        this.ctx.fillText('-', args[0], args[1]);
+    }
+}
+
+Battle.prototype._draw_zoomed_room = function() {
+    // 80 units to work with
+    // 20 menu, 20 monster info, 40 map
+    // max X here = 40; max room size X = 12; 12 * 3 = 36
+    // max Y here = 30; max room size y = 6;  6 * 3 = 18;
+    
+    // make room three times larger!
+    var new_x_size = this.room.size[0] * 3;
+    var new_y_size = this.room.size[1] * 3;
+
+    // center it!
+    var new_x_loc = (this.c.width/10)/2 - (new_x_size/2) - 1;
+    var new_y_loc = (this.c.height/10)/2 - 5 - (new_y_size/2);
+
+    for (var i = new_x_loc; i < new_x_loc + new_x_size + 2; i += 1) {
+        var args = convert_grid_location_into_filltext_args(i, new_y_loc);
+        this.ctx.fillText('-', args[0], args[1]);
+        args = convert_grid_location_into_filltext_args(i, new_y_loc + new_y_size + 1);
+        this.ctx.fillText('-', args[0], args[1]);
+    }
+    for (i = new_y_loc + 1; i < new_y_loc + new_y_size + 1; i += 1) {
+        var args = convert_grid_location_into_filltext_args(new_x_loc, i);
+        this.ctx.fillText('I', args[0], args[1]);
+        args = convert_grid_location_into_filltext_args(new_x_loc + new_x_size + 1, i);
+        this.ctx.fillText('I', args[0], args[1]);
+    }
+}
+
+Battle.prototype._draw_monster_info = function() {
+
+}
+
+Battle.prototype._draw_agents_on_map = function() {
 
 }

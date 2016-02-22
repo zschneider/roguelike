@@ -286,8 +286,8 @@ Level.prototype.level_up = function () {
 }
 
 // Creates a battle object and passes game loop control to it.
-Level.prototype.start_battle = function (monster) {
-    var battle = new Battle(this.c, this.ctx, monster, this);
+Level.prototype.start_battle = function (monster, room) {
+    var battle = new Battle(this.c, this.ctx, room, monster, this);
     this.battle = battle;
 }
 

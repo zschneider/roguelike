@@ -63,7 +63,7 @@ Monster.prototype.attempt_move = function(loc) {
     }
     else if (loc[0] == this.level.player.location[0] &&
              loc[1] == this.level.player.location[1]) {
-        this.level.start_battle(this);
+        this.level.start_battle(this, this.current_room);
     }
     else if (!this.current_room.is_wall(loc)) {
         this.location = loc;

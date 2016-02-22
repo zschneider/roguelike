@@ -8,7 +8,7 @@ var current_level = null;
 function init() {
     var c = document.getElementById("game-canvas");
     var ctx = c.getContext("2d");
-    ctx.font = "10px Courier";
+    ctx.font = GAME_FONT;
 
     generate_first_level_and_spawn_player(c, ctx);
     requestAnimationFrame(game_loop);
@@ -38,6 +38,7 @@ function game_loop () {
             current_level.battle.draw_intro();
         }
         else {
+            current_level.battle.listen();
             current_level.battle.draw();
         }
     }

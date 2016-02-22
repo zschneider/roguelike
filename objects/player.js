@@ -63,7 +63,7 @@ Player.prototype.attempt_move = function(new_loc) {
         this.location = possible_room.location;
     }
     else if (possible_monster != null) {
-        this.level.start_battle(possible_monster);
+        this.level.start_battle(possible_monster, this.current_room);
     }
     else if (this.current_room.is_escape_room && 
              new_loc[0] == this.current_room.get_middle_of_room()[0] &&

@@ -67,6 +67,14 @@ var BATTLE_TEXT =
 // " | |_) | (_| | |_| |_| |  __/_| \n" +
 // " |____/ \\__,_|\\__|\\__|_|\\___(_) \n" +
 // "                                ";
-var BATTLE_INTRO_TIME = 3000;
+var BATTLE_INTRO_TIME = 1000;
 var BATTLE_TEXT_WIDTH = 30;
+
+var FLEE = "flee";
+var MELEE = "melee";
+var MENU_OPTIONS = [FLEE, MELEE];
+
+var GAME_FONT = "10px Courier";
+var BATTLE_MENU_FONT = "16px Courier";
+
                                                 
