@@ -10,6 +10,7 @@ var Key = {
   UP: 38,
   RIGHT: 39,
   DOWN: 40,
+  ENTER: 13,
 
   onKeydown: function(event) {
     this.last_key_pressed = event.keyCode;

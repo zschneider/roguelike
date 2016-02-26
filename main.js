@@ -34,12 +34,12 @@ function game_loop () {
     //draw_ui_line(c, ctx);
 
     if (current_level.battle != null) {
+        current_level.battle.draw();
         if (current_level.battle.intro_transition) {
             current_level.battle.draw_intro();
         }
         else {
             current_level.battle.listen();
-            current_level.battle.draw();
         }
     }
     else {

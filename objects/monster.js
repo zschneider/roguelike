@@ -34,7 +34,7 @@ Monster.prototype.move_towards = function(loc) {
     // idea: abs(x - x), abs(y - y), reduce by greater of the two
     var x_diff = Math.abs(loc[0] - this.location[0]);
     var y_diff = Math.abs(loc[1] - this.location[1]);
-    if (x_diff >= y_diff) {
+    if (x_diff > y_diff) {
         // move in x direction towards location
         if (loc[0] > this.location[0]) this.attempt_move([this.location[0]+1, this.location[1]]);
         else this.attempt_move([this.location[0]-1, this.location[1]]);
@@ -59,7 +59,7 @@ Monster.prototype.move_towards = function(loc) {
 Monster.prototype.attempt_move = function(loc) {
     possible_room = this.current_room.is_door(loc);
     if (possible_room != null) {
-        this.current_room = possible_room.room;
+        //this.current_room = possible_room.room;
     }
     else if (loc[0] == this.level.player.location[0] &&
              loc[1] == this.level.player.location[1]) {

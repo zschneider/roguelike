@@ -70,9 +70,38 @@ var BATTLE_TEXT =
 var BATTLE_INTRO_TIME = 1000;
 var BATTLE_TEXT_WIDTH = 30;
 
-var FLEE = "flee";
-var MELEE = "melee";
-var MENU_OPTIONS = [FLEE, MELEE];
+var MOVE = "Move";
+var FLEE = "Flee";
+var MELEE = "Melee";
+var MAGIC = "Magic"
+var INVENTORY = "Inventory";
+var BACK = "Back";
+var YES = "Yes";
+
+var MAIN_BATTLE_OPTIONS = {
+    text: "Battle Options",
+    options: [MOVE, FLEE, MELEE, MAGIC, INVENTORY],
+}
+
+var BATTLE_MELEE_MENU = {
+    text: "Melee",
+    options: [BACK],
+}
+
+var BATTLE_MAGIC_MENU = {
+    text: "Magic",
+    options: [BACK],
+}
+
+var BATTLE_FLEE_MENU = {
+    text: "Are you sure?",
+    options: [YES, BACK],
+}
+
+var BATTLE_INVENTORY_MENU = {
+    text: "Inventory",
+    options: [BACK],
+}
 
 var GAME_FONT = "10px Courier";
 var BATTLE_MENU_FONT = "16px Courier";
