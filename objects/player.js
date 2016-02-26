@@ -35,23 +35,19 @@ Player.prototype.listen = function() {
 // ----------- Movement -----------
 
 Player.prototype.move_north = function() {
-    var new_loc = [this.location[0], this.location[1] - 1];
-    this.attempt_move(new_loc);
+    this.attempt_move(potential_north(this.location));
 }
 
 Player.prototype.move_west = function() {
-    var new_loc = [this.location[0] - 1, this.location[1]];
-    this.attempt_move(new_loc);
+    this.attempt_move(potential_west(this.location));
 }
 
 Player.prototype.move_east = function() {
-    var new_loc = [this.location[0] + 1, this.location[1]];
-    this.attempt_move(new_loc);
+    this.attempt_move(potential_east(this.location));
 }
 
 Player.prototype.move_south = function() {
-    var new_loc = [this.location[0], this.location[1] + 1];
-    this.attempt_move(new_loc);
+    this.attempt_move(potential_south(this.location));
 }
 
 Player.prototype.attempt_move = function(new_loc) {

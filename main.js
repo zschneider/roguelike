@@ -63,6 +63,21 @@ function clear(c, ctx) {
 
 // ----------- Utilities -----------
 
+function potential_north(loc_array) {
+    return [loc_array[0], loc_array[1] - 1];
+}
+
+function potential_south(loc_array) {
+    return [loc_array[0], loc_array[1] + 1];
+}
+
+function potential_east(loc_array) {
+    return [loc_array[0] + 1, loc_array[1]];
+}
+
+function potential_west(loc_array) {
+    return [loc_array[0] - 1, loc_array[1]];
+}
 
 function convert_grid_location_into_filltext_args(x, y) {
     return [2.5 + (x*10), 7.5 + (y * 10)];

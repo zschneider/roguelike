@@ -81,26 +81,38 @@ var YES = "Yes";
 var MAIN_BATTLE_OPTIONS = {
     text: "Battle Options",
     options: [MOVE, FLEE, MELEE, MAGIC, INVENTORY],
+    draw_direction: false,
+}
+
+var BATTLE_MOVE_MENU = {
+    text: "Direction?",
+    options: [MOVE, BACK],
+    draw_direction: true,
+    direction: NORTH,
 }
 
 var BATTLE_MELEE_MENU = {
     text: "Melee",
     options: [BACK],
+    draw_direction: false,
 }
 
 var BATTLE_MAGIC_MENU = {
     text: "Magic",
     options: [BACK],
+    draw_direction: false,
 }
 
 var BATTLE_FLEE_MENU = {
     text: "Are you sure?",
     options: [YES, BACK],
+    draw_direction: false,
 }
 
 var BATTLE_INVENTORY_MENU = {
     text: "Inventory",
     options: [BACK],
+    draw_direction: false,
 }
 
 var GAME_FONT = "10px Courier";
