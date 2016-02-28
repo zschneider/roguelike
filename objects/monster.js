@@ -11,7 +11,7 @@ var Monster = function(ctx, level) {
     this.location = null;
     this.type = null;
     this.level = level;
-}
+};
 
 // ----------- Creation -----------
 
@@ -26,7 +26,7 @@ Monster.prototype.randomly_setup = function(room) {
             break;
         }
     }
-}
+};
 
 // ----------- Movement -----------
 
@@ -41,7 +41,7 @@ Monster.prototype.move_towards = function(loc) {
     }
     else if (x_diff == y_diff) {
         var rand = getRandomInt(0,1);
-        if (rand == 0) {
+        if (rand === 0) {
             if (loc[1] > this.location[1]) this.attempt_move([this.location[0], this.location[1]+1]);
             else this.attempt_move([this.location[0], this.location[1]-1]);
         }
@@ -54,11 +54,11 @@ Monster.prototype.move_towards = function(loc) {
         if (loc[1] > this.location[1]) this.attempt_move([this.location[0], this.location[1]+1]);
         else this.attempt_move([this.location[0], this.location[1]-1]);   
     }
-}
+};
 
 Monster.prototype.attempt_move = function(loc) {
     possible_room = this.current_room.is_door(loc);
-    if (possible_room != null) {
+    if (possible_room !== null) {
         //this.current_room = possible_room.room;
     }
     else if (loc[0] == this.level.player.location[0] &&
@@ -68,7 +68,7 @@ Monster.prototype.attempt_move = function(loc) {
     else if (!this.current_room.is_wall(loc)) {
         this.location = loc;
     }
-}
+};
 
 // ----------- Combat -----------
 
@@ -77,7 +77,7 @@ Monster.prototype.take_damage = function(attack) {
     if (this.health <= 0) {
         this.die();
     }
-}
+};
 
 Monster.prototype.die = function() {
     for (var i = 0; i < this.level.monsters.length; i++) {
@@ -85,11 +85,11 @@ Monster.prototype.die = function() {
             this.level.monsters.splice(i, 1);
         }
     }
-}
+};
 
 // ----------- Draw -----------
 
 Monster.prototype.draw = function() {
     var args = convert_grid_location_into_filltext_args(this.location[0], this.location[1]);
     this.ctx.fillText("M", args[0], args[1]);
-}
+};

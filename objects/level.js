@@ -12,7 +12,7 @@ var Level = function(c, ctx, player) {
     this.monsters = [];
     this.player_attempted_move = false;
     this.battle = null;
-}
+};
 
 // ----------- Initialization ----------- 
 
@@ -20,7 +20,7 @@ Level.prototype.setup_player_position = function() {
     this.player.current_room = this.start_room;
     this.player.location = this.start_room.get_middle_of_room();
     this.player.draw();
-}
+};
 
 // Creates a starting room, room map, then adds monsters, and an escape room
 Level.prototype.generate_room_tree = function() {
@@ -36,24 +36,28 @@ Level.prototype.generate_room_tree = function() {
     this._continue_branching_rooms(rooms_to_be_branched, 1);
     this.assign_escape_room();
     if (DEBUG_SPAWN_MONSTERS) this.assign_monsters();
-}
+};
 
 // ----------- Procedural Generation -----------
 
 // Recursive function that branches rooms using room probabilities in constants
 Level.prototype._continue_branching_rooms = function(rooms_to_be_explored, branch_level) {
     var curr_door_probs = DOOR_PROBS[branch_level];
-    if (curr_door_probs == null) {
+
+    var i = 0;
+    var room = null;
+
+    if (curr_door_probs === null) {
         // Save some debug information
-        for (var i = 0; i < rooms_to_be_explored.length; i++) {
-            var room = rooms_to_be_explored[i];
+        for (i = 0; i < rooms_to_be_explored.length; i++) {
+            room = rooms_to_be_explored[i];
             room.save_debug_info(1, branch_level);
         } 
         return;
     }
     var rooms_to_be_branched = [];
-    for (var i = 0; i < rooms_to_be_explored.length; i++) {
-        var room = rooms_to_be_explored[i];
+    for (i = 0; i < rooms_to_be_explored.length; i++) {
+        room = rooms_to_be_explored[i];
         var doors = this._get_random_number_of_doors(branch_level);
         room.door_prob = doors;
         room.branch_level = branch_level;
@@ -62,22 +66,21 @@ Level.prototype._continue_branching_rooms = function(rooms_to_be_explored, branc
         rooms_to_be_branched = rooms_to_be_branched.concat(new_rooms);
     }
     this._continue_branching_rooms(rooms_to_be_branched, branch_level + 1);
-}
+};
 
 // Takes a number of doors and a room, and then actually builds the connecting rooms
 Level.prototype._create_connected_rooms = function(doors, old_room) {
     var cardinals = [NORTH, SOUTH, EAST, WEST];
     var rooms_to_be_branched = [];
 
-
-    for (i = 0; i < doors && cardinals.length != 0; i++) {
+    for (var i = 0; i < doors && cardinals.length !== 0; i++) {
         var r = getRandomInt(0, 3 - i);
         var door_to_be = cardinals[r];
         cardinals.splice(r, 1);
         var index = this.convert_cardinal_into_index(door_to_be, old_room.level_room_index);
         if (this.check_if_fit(index)) {
             new_room = this.add_room(index);
-            this._set_room_relationships(door_to_be, new_room, old_room)
+            this._set_room_relationships(door_to_be, new_room, old_room);
             rooms_to_be_branched.push(new_room);
         }
         else {
@@ -85,7 +88,7 @@ Level.prototype._create_connected_rooms = function(doors, old_room) {
         }    
     }
     return rooms_to_be_branched;
-}
+};
 
 // Gets a random number of doors based on room probabilities in constants and depth in tree
 Level.prototype._get_random_number_of_doors = function(branch_level) {
@@ -99,7 +102,7 @@ Level.prototype._get_random_number_of_doors = function(branch_level) {
         }
     }
     return doors;
-}
+};
 
 Level.prototype._set_room_relationships = function(direction, new_room, old_room) {
     if (direction == NORTH) {
@@ -120,24 +123,24 @@ Level.prototype._set_room_relationships = function(direction, new_room, old_room
     }
     new_room.door_num += 1;
     old_room.door_num += 1;
-}
+};
 
 // Look through all rooms. Assign one with 1 door to be escape room.
 Level.prototype.assign_escape_room = function() {
     var possible_escape_rooms = [];
     for (var i = 0; i < this.room_grid.length; i++) {
-        if (this.room_grid[i] != null && this.room_grid[i].door_num == 1) {
+        if (this.room_grid[i] !== null && this.room_grid[i].door_num == 1) {
             possible_escape_rooms.push(this.room_grid[i]);
         }
     }
     var r = getRandomInt(0, possible_escape_rooms.length-1);
     possible_escape_rooms[r].add_escape();
-}
+};
 
 // Randomly place monsters in some rooms
 Level.prototype.assign_monsters = function() {
     for (var i = 0; i < this.room_grid.length; i++) {
-        if (this.room_grid[i] != null && !this.room_grid[i].is_escape_room && !this.room_grid[i].is_start_room) {
+        if (this.room_grid[i] !== null && !this.room_grid[i].is_escape_room && !this.room_grid[i].is_start_room) {
             var r = getRandomInt(1, 2);
             if (r == 1) {
                 m = new Monster(this.ctx, this);
@@ -146,7 +149,7 @@ Level.prototype.assign_monsters = function() {
             }
         }
     }
-}
+};
 
 // ----------- Add Rooms -----------
 
@@ -175,7 +178,7 @@ Level.prototype.add_start_room = function() {
     start_room.is_start_room = true;
 
     return start_room;
-}
+};
 
 Level.prototype.add_room = function(index) {
     new_room = new Room(this.ctx);
@@ -184,23 +187,23 @@ Level.prototype.add_room = function(index) {
     new_room.set_size_and_placement(GRID_DIMENSIONS[new_room.level_room_index]);
     this.room_grid[index] = new_room;
     return new_room;
-}
+};
 
 // ----------- Information -----------
 
 // Boolean room map utility that checks the room container for space for a room.
 Level.prototype.check_if_fit = function(index) {
-    if (index == null) {
+    if (index === null) {
         return false;
     }
     if (index < 0 || index >= 25) {
         return false;
     }
-    if (this.room_grid[index] != null) {
+    if (this.room_grid[index] !== null) {
         return false;
     }
     return true;
-}
+};
 
 // Returns the monster on a space, else null
 Level.prototype.check_space_for_monster = function(loc) {
@@ -211,7 +214,7 @@ Level.prototype.check_space_for_monster = function(loc) {
         }
     }
     return null;
-}
+};
 
 // Boolean function that returns true if this monster is next to player
 Level.prototype.next_to_player = function(monster) {
@@ -231,7 +234,7 @@ Level.prototype.next_to_player = function(monster) {
         monster.location[1] - 1 == this.player.location[1]) {
         return true;
     }
-}
+};
 
 // ----------- Utilities -----------
 
@@ -249,7 +252,7 @@ Level.prototype.convert_cardinal_into_index = function(direction, index) {
         return index + 5;
     }
     else if (direction == WEST) {
-        if (index % 5 == 0) {
+        if (index % 5 === 0) {
             return null;
         }
         return index - 1;
@@ -260,7 +263,7 @@ Level.prototype.convert_cardinal_into_index = function(direction, index) {
         }
         return index + 1;
     }
-}
+};
 
 // ----------- Game Functions -----------
 
@@ -274,7 +277,7 @@ Level.prototype.resolve_monsters = function() {
         }
         this.player_attempted_move = false;
     }
-}
+};
 
 // Levels up the player by creating a new level and procedurally generating it.
 Level.prototype.level_up = function () {
@@ -283,19 +286,19 @@ Level.prototype.level_up = function () {
     temp_level.setup_player_position();
     // global variable
     current_level = temp_level;
-}
+};
 
 // Creates a battle object and passes game loop control to it.
 Level.prototype.start_battle = function (monster, room) {
     var battle = new Battle(this.c, this.ctx, room, monster, this);
     this.battle = battle;
-}
+};
 
 // ----------- Draw -----------
 
 Level.prototype.draw = function () {
     for (var i = 0; i < 25; i++) {
-        if (this.room_grid[i] != null) {
+        if (this.room_grid[i] !== null) {
             this.room_grid[i].draw();
         }
     }
@@ -303,13 +306,13 @@ Level.prototype.draw = function () {
     this._draw_ui();
     this._draw_monsters();
     this.player.draw();
-}
+};
 
 Level.prototype._draw_ui = function() {
     this._draw_name();
     this._draw_health();
     this._draw_mana();
-}
+};
 
 Level.prototype._draw_name = function() {
     for (var i = 1; i < 25; i++) {
@@ -321,7 +324,7 @@ Level.prototype._draw_name = function() {
     this.ctx.font = "bold 12px Courier";
     this.ctx.fillText(this.player.name, name_args[0], name_args[1]);
     this.ctx.font = font;
-}
+};
 
 Level.prototype._draw_health = function() {
     var health_args = convert_grid_location_into_filltext_args(1, 53);
@@ -334,7 +337,7 @@ Level.prototype._draw_health = function() {
     }
     health_args = convert_grid_location_into_filltext_args(22, 53);
     this.ctx.fillText(Math.floor(this.player.health), health_args[0], health_args[1]);
-}
+};
 
 Level.prototype._draw_mana = function() {
     var mana_args = convert_grid_location_into_filltext_args(1, 55);
@@ -347,7 +350,7 @@ Level.prototype._draw_mana = function() {
     }
     mana_args = convert_grid_location_into_filltext_args(22, 55);
     this.ctx.fillText(Math.floor(this.player.mana), mana_args[0], mana_args[1]);    
-}
+};
 
 Level.prototype._draw_monsters = function() {
     for (var i = 0; i < this.monsters.length; i++) {
@@ -355,7 +358,7 @@ Level.prototype._draw_monsters = function() {
             this.monsters[i].draw();
         }
     }
-}
+};
 
 Level.prototype._draw_border = function() {
     var i = 0;
@@ -364,7 +367,7 @@ Level.prototype._draw_border = function() {
         this.ctx.fillText('-', args[0], args[1]);
         args = convert_grid_location_into_filltext_args(i, this.c.height/10 - 1);
         this.ctx.fillText('-', args[0], args[1]);
-        if (i != 0 && i != 79) {
+        if (i !== 0 && i != 79) {
             args = convert_grid_location_into_filltext_args(i, 50);
             this.ctx.fillText('-', args[0], args[1]);
         }
@@ -376,4 +379,4 @@ Level.prototype._draw_border = function() {
         this.ctx.fillText('I', args_left[0], args_left[1]);
         this.ctx.fillText('I', args_right[0], args_right[1]);    
     }
-}
+};

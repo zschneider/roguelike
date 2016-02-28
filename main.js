@@ -33,7 +33,7 @@ function game_loop () {
     //draw_room_holder_grid(current_level.c, current_level.ctx);
     //draw_ui_line(c, ctx);
 
-    if (current_level.battle != null) {
+    if (current_level.battle !== null) {
         current_level.battle.draw();
         if (current_level.battle.intro_transition) {
             current_level.battle.draw_intro();
@@ -89,7 +89,7 @@ function getRandomInt(min, max) {
 
 //http://bitstructures.com/2007/11/javascript-method-callbacks.html
 function bind(toObject, methodName){
-    return function(){toObject[methodName]()}
+    return function(){toObject[methodName]();};
 }
 
 // ----------- Debug tools -----------

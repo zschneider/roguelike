@@ -14,13 +14,13 @@ var Player = function(ctx) {
     this.strength = 25;
     this.level = null;
     this.dead = false;
-}
+};
 
 // ----------- User Input -----------
 
 Player.prototype.listen = function() {
     key = Key.last_key_pressed;
-    if (key != null) {
+    if (key !== null) {
         this.level.player_attempted_move = true;
 
         if (key == Key.UP) this.move_north();
@@ -30,35 +30,35 @@ Player.prototype.listen = function() {
 
         Key.last_key_pressed = null;
     }
-}
+};
 
 // ----------- Movement -----------
 
 Player.prototype.move_north = function() {
     this.attempt_move(potential_north(this.location));
-}
+};
 
 Player.prototype.move_west = function() {
     this.attempt_move(potential_west(this.location));
-}
+};
 
 Player.prototype.move_east = function() {
     this.attempt_move(potential_east(this.location));
-}
+};
 
 Player.prototype.move_south = function() {
     this.attempt_move(potential_south(this.location));
-}
+};
 
 Player.prototype.attempt_move = function(new_loc) {
     possible_room = this.current_room.is_door(new_loc);
     possible_monster = this.level.check_space_for_monster(new_loc);
-    if (possible_room != null) {
+    if (possible_room !== null) {
         possible_room.room.visible = true;
         this.current_room = possible_room.room;
         this.location = possible_room.location;
     }
-    else if (possible_monster != null) {
+    else if (possible_monster !== null) {
         this.level.start_battle(possible_monster, this.current_room);
     }
     else if (this.current_room.is_escape_room && 
@@ -69,7 +69,7 @@ Player.prototype.attempt_move = function(new_loc) {
     else if (!this.current_room.is_wall(new_loc)) {
         this.location = new_loc;
     }
-}
+};
 
 // ----------- Combat -----------
 
@@ -78,29 +78,29 @@ Player.prototype.take_damage = function(attack) {
     if (this.health <= 0) {
         this.die();
     }
-}
+};
 
 Player.prototype.die = function() {
     this.health = 0;
     this.dead = true;
-}
+};
 
 // ----------- Inventory ----------
 
 Player.prototype.get_equipped_melee_weapon = function() {
     return {
         range: 2,
-    }
-}
+    };
+};
 
 Player.prototype.get_equipped_ranged_weapon = function() {
     return {
         range: 9,
-    }
-}
+    };
+};
 // ----------- Draw -----------
 
 Player.prototype.draw = function () {
     var args = convert_grid_location_into_filltext_args(this.location[0], this.location[1]);
     this.ctx.fillText("H", args[0], args[1]);
-}
+};

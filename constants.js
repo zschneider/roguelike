@@ -3,19 +3,19 @@
 // DOOR PROBABILITIES
 // Make sure 0% chance of one door at branch_0,
 // Make sure 100% chance of one door at branch_4
-var BRANCH_0 = [0, 10, 30, 100]
-var BRANCH_1 = [10, 25, 50, 100]
-var BRANCH_2 = [40, 70, 90, 100]
-var BRANCH_3 = [50, 75, 95, 100]
-var BRANCH_4 = [100, 100, 100, 100]
+var BRANCH_0 = [0, 10, 30, 100];
+var BRANCH_1 = [10, 25, 50, 100];
+var BRANCH_2 = [40, 70, 90, 100];
+var BRANCH_3 = [50, 75, 95, 100];
+var BRANCH_4 = [100, 100, 100, 100];
 
-var DOOR_PROBS = [BRANCH_0, BRANCH_1, BRANCH_2, BRANCH_3, BRANCH_4]
+var DOOR_PROBS = [BRANCH_0, BRANCH_1, BRANCH_2, BRANCH_3, BRANCH_4];
 
 // STRING CONSTANTS
-var NORTH = 'N'
-var SOUTH = 'S'
-var EAST = 'E'
-var WEST = 'W'
+var NORTH = 'N';
+var SOUTH = 'S';
+var EAST = 'E';
+var WEST = 'W';
 
 // GRID DIMENSIONS
 var HOLDER_SIZE_X = 14;
@@ -73,7 +73,7 @@ var BATTLE_TEXT_WIDTH = 30;
 var MOVE = "Move";
 var FLEE = "Flee";
 var PHYSICAL = "Physical";
-var MAGIC = "Magic"
+var MAGIC = "Magic";
 var INVENTORY = "Inventory";
 var BACK = "Back";
 var YES = "Yes";
@@ -81,52 +81,52 @@ var YES = "Yes";
 var MAIN_BATTLE_OPTIONS = {
     text: "Battle Options",
     options: [MOVE, FLEE, PHYSICAL, MAGIC, INVENTORY],
-}
+};
 
 var BATTLE_MOVE_MENU = {
     text: "Direction?",
     options: [MOVE, BACK],
     draw_direction: true,
     direction: NORTH,
-}
+};
 
 // PHYISCAL ATTACK MENU AND SUBMENUS
-var RANGED = "Ranged"
-var MELEE = "Melee"
-var ATTACK = "Attack"
+var RANGED = "Ranged";
+var MELEE = "Melee";
+var ATTACK = "Attack";
 
 var BATTLE_PHYSICAL_MENU = {
     text: "Physical",
     options: [MELEE, RANGED, BACK],
-}
+};
 
 var PHYSICAL_RANGED_MENU = {
     text: "Ranged Attack",
     options: [ATTACK, BACK],
     draw_ranged: true,
     direction: NORTH,
-}
+};
 
 var PHYSICAL_MELEE_MENU = {
     text: "Melee Attack",
     options: [ATTACK, BACK],
     draw_melee: true,
-}
+};
 
 var BATTLE_MAGIC_MENU = {
     text: "Magic",
     options: [BACK],
-}
+};
 
 var BATTLE_FLEE_MENU = {
     text: "Are you sure?",
     options: [YES, BACK],
-}
+};
 
 var BATTLE_INVENTORY_MENU = {
     text: "Inventory",
     options: [BACK],
-}
+};
 
 var GAME_FONT = "10px Courier";
 var BATTLE_MENU_FONT = "16px Courier";

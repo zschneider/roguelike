@@ -19,24 +19,22 @@ var Battle = function(c, ctx, room, monster, level) {
     this.selected = 0;
     this.menu = MAIN_BATTLE_OPTIONS;
 
-    // zoomed room info, eliminate duplicate calcs
+    // zoomed room info
     this.battle_room = new Room(ctx, 
                                 [this.room.size[0] * 3, this.room.size[1] * 3],
                                 [(this.c.width/10)/2 - ((this.room.size[0] * 3)/2) - 1,
                                 (this.c.height/10)/2 - 5 - ((this.room.size[1]*3)/2)]);
-    // this.room_size = [this.room.size[0] * 3, this.room.size[1] * 3];
-    // this.room_location = [(this.c.width/10)/2 - (this.room_size[0]/2) - 1,
-    //                       (this.c.height/10)/2 - 5 - (this.room_size[1]/2)]
+
     // player and monster location info
     this.player_location = this.get_random_start_location();
     this.monster_location = this.get_random_start_location();
-}
+};
 
 // Return a random location within the 3x room. 
 
 Battle.prototype.get_random_start_location = function() {
     // get random x, get random y
-    var room = this.battle_room
+    var room = this.battle_room;
     var x = getRandomInt(room.location[0] + 1, room.location[0] + room.size[0] - 1);
     var y = getRandomInt(room.location[1] + 1, room.location[1] + room.size[1] - 1);
 
@@ -46,7 +44,7 @@ Battle.prototype.get_random_start_location = function() {
     }
     
     return [x, y];
-}
+};
 
 
 Battle.prototype.move_menu_up = function() {
@@ -56,7 +54,7 @@ Battle.prototype.move_menu_up = function() {
     else {
         this.selected -= 1;
     }
-}
+};
 
 Battle.prototype.move_menu_down = function() {
     if (this.selected + 1 >= this.menu.options.length) {
@@ -65,7 +63,7 @@ Battle.prototype.move_menu_down = function() {
     else {
         this.selected += 1;
     }
-}
+};
 
 Battle.prototype.move_direction_right = function() {
     if ("direction" in this.menu) {
@@ -82,7 +80,7 @@ Battle.prototype.move_direction_right = function() {
             this.menu.direction = NORTH;
         }
     }
-}
+};
 
 Battle.prototype.move_direction_left = function() {
     if ("direction" in this.menu) {
@@ -99,35 +97,36 @@ Battle.prototype.move_direction_left = function() {
             this.menu.direction = SOUTH;
         }
     }
-}
+};
 
 Battle.prototype.move_player = function() {
+    var loc = [];
     if (this.menu.direction == NORTH) {
         // check if wall
-        var loc = potential_north(this.player_location);
+        loc = potential_north(this.player_location);
         if (!this.battle_room.is_wall(loc)) {
             this.player_location = loc;
         }
     }
     else if (this.menu.direction == EAST) {
-        var loc = potential_east(this.player_location);
+        loc = potential_east(this.player_location);
         if (!this.battle_room.is_wall(loc)) {
             this.player_location = loc;
         }
     }
     else if (this.menu.direction == WEST) {
-        var loc = potential_west(this.player_location);
+        loc = potential_west(this.player_location);
         if (!this.battle_room.is_wall(loc)) {
             this.player_location = loc;
         }
     }
     else if (this.menu.direction == SOUTH) {
-        var loc = potential_south(this.player_location);
+        loc = potential_south(this.player_location);
         if (!this.battle_room.is_wall(loc)) {
             this.player_location = loc;
         }
     }
-}
+};
 
 Battle.prototype.activate_menu_item = function() {
     if (this.menu == MAIN_BATTLE_OPTIONS) {
@@ -179,7 +178,7 @@ Battle.prototype.activate_menu_item = function() {
             case ATTACK:
                 break;
             case BACK:
-                this.change_menu(BATTLE_PHYSICAL_MENU)
+                this.change_menu(BATTLE_PHYSICAL_MENU);
                 break;
         }
     }
@@ -188,7 +187,7 @@ Battle.prototype.activate_menu_item = function() {
             case ATTACK:
                 break;
             case BACK:
-                this.change_menu(BATTLE_PHYSICAL_MENU)
+                this.change_menu(BATTLE_PHYSICAL_MENU);
                 break;
         }
     }
@@ -215,22 +214,22 @@ Battle.prototype.activate_menu_item = function() {
                 this.leave_battle();
         }
     }
-}
+};
 
 Battle.prototype.trigger_monster_move = function() {
     // attack or move
 
-}
+};
 
 Battle.prototype.change_menu = function(menu) {
     this.menu = menu;
     this.selected = 0;
-}
+};
 
 
 Battle.prototype.leave_battle = function () {
     this.level.battle = null;
-}
+};
 
 Battle.prototype.draw = function() {
     this.level._draw_border();
@@ -238,11 +237,11 @@ Battle.prototype.draw = function() {
     this._draw_battle_text();
     this._draw_battle_border();
     this._draw_ui();
-}
+};
 
 Battle.prototype.listen = function() {
     var key = Key.last_key_pressed;
-    if (key != null) {
+    if (key !== null) {
         if (key == Key.UP) this.move_menu_up();
         if (key == Key.DOWN) this.move_menu_down();
         if (key == Key.RIGHT) this.move_direction_right();
@@ -250,7 +249,7 @@ Battle.prototype.listen = function() {
         if (key == Key.ENTER) this.activate_menu_item();
         Key.last_key_pressed = null;
     }
-}
+};
 
 Battle.prototype.draw_intro = function() {
     // TODO: move the text_location to appropriate value given time into BATTLE_INTRO_TIME
@@ -263,7 +262,7 @@ Battle.prototype.draw_intro = function() {
     if ((this.intro_current_time - this.intro_start_time) > BATTLE_INTRO_TIME) {
         this.intro_transition = false;
     }
-}
+};
 
 Battle.prototype._draw_battle_text = function() {
     var temp_buffer = [];
@@ -284,7 +283,7 @@ Battle.prototype._draw_battle_text = function() {
             temp_buffer = [];
         }
     }
-}
+};
 
 Battle.prototype._draw_battle_border = function() {
     for (i = 1; i < this.c.width/10 - 1; i += 1) {
@@ -293,14 +292,14 @@ Battle.prototype._draw_battle_border = function() {
         args = convert_grid_location_into_filltext_args(i, 40);
         this.ctx.fillText('-', args[0], args[1]);
     }
-}
+};
 
 Battle.prototype._draw_ui = function() {
     this._draw_menu();
     this._draw_zoomed_room();
     this._draw_monster_info();
     this._draw_agents_on_map();
-}
+};
 
 Battle.prototype._draw_menu = function() {
     this.ctx.font = BATTLE_MENU_FONT;
@@ -323,7 +322,7 @@ Battle.prototype._draw_menu = function() {
         args = convert_grid_location_into_filltext_args(i, 13);
         this.ctx.fillText('-', args[0], args[1]);
     }
-}
+};
 
 Battle.prototype._draw_zoomed_room = function() {
     // 80 units to work with
@@ -331,19 +330,20 @@ Battle.prototype._draw_zoomed_room = function() {
     // max X here = 40; max room size X = 12; 12 * 3 = 36
     // max Y here = 30; max room size y = 6;  6 * 3 = 18;
     var room = this.battle_room;
+    var args = [];
     for (var i = room.location[0]; i < room.location[0] + room.size[0] + 2; i += 1) {
-        var args = convert_grid_location_into_filltext_args(i, room.location[1]);
+        args = convert_grid_location_into_filltext_args(i, room.location[1]);
         this.ctx.fillText('-', args[0], args[1]);
         args = convert_grid_location_into_filltext_args(i, room.location[1] + room.size[1] + 1);
         this.ctx.fillText('-', args[0], args[1]);
     }
     for (i = room.location[1] + 1; i < room.location[1] + room.size[1] + 1; i += 1) {
-        var args = convert_grid_location_into_filltext_args(room.location[0], i);
+        args = convert_grid_location_into_filltext_args(room.location[0], i);
         this.ctx.fillText('I', args[0], args[1]);
         args = convert_grid_location_into_filltext_args(room.location[0] + room.size[0] + 1, i);
         this.ctx.fillText('I', args[0], args[1]);
     }
-}
+};
 
 Battle.prototype._draw_monster_info = function() {
     this.ctx.font = BATTLE_MENU_FONT;
@@ -359,7 +359,7 @@ Battle.prototype._draw_monster_info = function() {
         this.ctx.fillText('-', args[0], args[1]);
     }
     // TODO: finish monster info
-}
+};
 
 Battle.prototype._draw_agents_on_map = function() {
     // player
@@ -379,7 +379,7 @@ Battle.prototype._draw_agents_on_map = function() {
     args = convert_grid_location_into_filltext_args(this.monster_location[0],
                                                     this.monster_location[1]);
     this.ctx.fillText('M', args[0], args[1]);
-}
+};
 
 Battle.prototype._draw_weapon_ranged = function() {
     var range = this.level.player.get_equipped_ranged_weapon().range;
@@ -421,7 +421,7 @@ Battle.prototype._draw_weapon_ranged = function() {
             this.ctx.fillText('x', args[0], args[1]);
         }
     }
-}
+};
 
 Battle.prototype._draw_direction_icon = function() {
     var loc = [];
@@ -453,15 +453,16 @@ Battle.prototype._draw_direction_icon = function() {
             this.ctx.fillText('v', args[0], args[1]);
         }
     }
-}
+};
 
 Battle.prototype._draw_weapon_melee = function() {
     // range in all cardinals, range - 1 in diagonals
     var range = this.level.player.get_equipped_melee_weapon().range;
     var loc = [];
     var args = [];
+    var i = 0;
     // EAST
-    for (var i = this.player_location[0] + 1; i <= this.player_location[0] + range; i++) {
+    for (i = this.player_location[0] + 1; i <= this.player_location[0] + range; i++) {
         loc = [i, this.player_location[1]];
         if (this.battle_room.is_wall(loc)) {
             break;
@@ -470,7 +471,7 @@ Battle.prototype._draw_weapon_melee = function() {
         this.ctx.fillText('x', args[0], args[1]);
     }
     // WEST
-    for (var i = this.player_location[0] - 1; i >= this.player_location[0] - range; i--) {
+    for (i = this.player_location[0] - 1; i >= this.player_location[0] - range; i--) {
         loc = [i, this.player_location[1]];
         if (this.battle_room.is_wall(loc)) {
             break;
@@ -479,7 +480,7 @@ Battle.prototype._draw_weapon_melee = function() {
         this.ctx.fillText('x', args[0], args[1]);
     }
     // NORTH
-    for (var i = this.player_location[1] - 1; i >= this.player_location[1] - range; i--) {
+    for (i = this.player_location[1] - 1; i >= this.player_location[1] - range; i--) {
         loc = [this.player_location[0], i];
         if (this.battle_room.is_wall(loc)) {
             break;
@@ -488,7 +489,7 @@ Battle.prototype._draw_weapon_melee = function() {
         this.ctx.fillText('x', args[0], args[1]);
     }
     // SOUTH
-    for (var i = this.player_location[1] + 1; i <= this.player_location[1] + range; i++) {
+    for (i = this.player_location[1] + 1; i <= this.player_location[1] + range; i++) {
         loc = [this.player_location[0], i];
         if (this.battle_room.is_wall(loc)) {
             break;
@@ -497,7 +498,7 @@ Battle.prototype._draw_weapon_melee = function() {
         this.ctx.fillText('x', args[0], args[1]);
     }
     // SEAST
-    for (var i = 1; i < range; i++) {
+    for (i = 1; i < range; i++) {
         loc = [this.player_location[0] + i, this.player_location[1] + i];
         if (this.battle_room.is_wall(loc)) {
             break;
@@ -506,7 +507,7 @@ Battle.prototype._draw_weapon_melee = function() {
         this.ctx.fillText('x', args[0], args[1]);        
     }
     // SWEST
-    for (var i = 1; i < range; i++) {
+    for (i = 1; i < range; i++) {
         loc = [this.player_location[0] - i, this.player_location[1] + i];
         if (this.battle_room.is_wall(loc)) {
             break;
@@ -515,7 +516,7 @@ Battle.prototype._draw_weapon_melee = function() {
         this.ctx.fillText('x', args[0], args[1]);        
     }
     // NEAST
-    for (var i = 1; i < range; i++) {
+    for (i = 1; i < range; i++) {
         loc = [this.player_location[0] + i, this.player_location[1] - i];
         if (this.battle_room.is_wall(loc)) {
             break;
@@ -524,7 +525,7 @@ Battle.prototype._draw_weapon_melee = function() {
         this.ctx.fillText('x', args[0], args[1]);        
     }
     // NWEST
-    for (var i = 1; i < range; i++) {
+    for (i = 1; i < range; i++) {
         loc = [this.player_location[0] - i, this.player_location[1] - i];
         if (this.battle_room.is_wall(loc)) {
             break;
@@ -532,4 +533,4 @@ Battle.prototype._draw_weapon_melee = function() {
         args = convert_grid_location_into_filltext_args(loc[0], loc[1]);
         this.ctx.fillText('x', args[0], args[1]);        
     }
-}
+};
