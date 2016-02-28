@@ -2,12 +2,12 @@
 
 // Represents and draws rooms on the level map.
 
-var Room = function(ctx) {
+var Room = function(ctx, size, location) {
     this.ctx = ctx;
-    this.size = null;
+    this.size = size;
 
     // location is upper-left hand corner of room
-    this.location = null;
+    this.location = location;
     this.door_num = 0;
 
     // debug info

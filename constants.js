@@ -72,7 +72,7 @@ var BATTLE_TEXT_WIDTH = 30;
 
 var MOVE = "Move";
 var FLEE = "Flee";
-var MELEE = "Melee";
+var PHYSICAL = "Physical";
 var MAGIC = "Magic"
 var INVENTORY = "Inventory";
 var BACK = "Back";
@@ -80,8 +80,7 @@ var YES = "Yes";
 
 var MAIN_BATTLE_OPTIONS = {
     text: "Battle Options",
-    options: [MOVE, FLEE, MELEE, MAGIC, INVENTORY],
-    draw_direction: false,
+    options: [MOVE, FLEE, PHYSICAL, MAGIC, INVENTORY],
 }
 
 var BATTLE_MOVE_MENU = {
@@ -91,28 +90,42 @@ var BATTLE_MOVE_MENU = {
     direction: NORTH,
 }
 
-var BATTLE_MELEE_MENU = {
-    text: "Melee",
-    options: [BACK],
-    draw_direction: false,
+// PHYISCAL ATTACK MENU AND SUBMENUS
+var RANGED = "Ranged"
+var MELEE = "Melee"
+var ATTACK = "Attack"
+
+var BATTLE_PHYSICAL_MENU = {
+    text: "Physical",
+    options: [MELEE, RANGED, BACK],
+}
+
+var PHYSICAL_RANGED_MENU = {
+    text: "Ranged Attack",
+    options: [ATTACK, BACK],
+    draw_ranged: true,
+    direction: NORTH,
+}
+
+var PHYSICAL_MELEE_MENU = {
+    text: "Melee Attack",
+    options: [ATTACK, BACK],
+    draw_melee: true,
 }
 
 var BATTLE_MAGIC_MENU = {
     text: "Magic",
     options: [BACK],
-    draw_direction: false,
 }
 
 var BATTLE_FLEE_MENU = {
     text: "Are you sure?",
     options: [YES, BACK],
-    draw_direction: false,
 }
 
 var BATTLE_INVENTORY_MENU = {
     text: "Inventory",
     options: [BACK],
-    draw_direction: false,
 }
 
 var GAME_FONT = "10px Courier";

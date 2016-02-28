@@ -85,6 +85,19 @@ Player.prototype.die = function() {
     this.dead = true;
 }
 
+// ----------- Inventory ----------
+
+Player.prototype.get_equipped_melee_weapon = function() {
+    return {
+        range: 2,
+    }
+}
+
+Player.prototype.get_equipped_ranged_weapon = function() {
+    return {
+        range: 9,
+    }
+}
 // ----------- Draw -----------
 
 Player.prototype.draw = function () {

@@ -20,9 +20,13 @@ var Battle = function(c, ctx, room, monster, level) {
     this.menu = MAIN_BATTLE_OPTIONS;
 
     // zoomed room info, eliminate duplicate calcs
-    this.room_size = [this.room.size[0] * 3, this.room.size[1] * 3];
-    this.room_location = [(this.c.width/10)/2 - (this.room_size[0]/2) - 1,
-                          (this.c.height/10)/2 - 5 - (this.room_size[1]/2)]
+    this.battle_room = new Room(ctx, 
+                                [this.room.size[0] * 3, this.room.size[1] * 3],
+                                [(this.c.width/10)/2 - ((this.room.size[0] * 3)/2) - 1,
+                                (this.c.height/10)/2 - 5 - ((this.room.size[1]*3)/2)]);
+    // this.room_size = [this.room.size[0] * 3, this.room.size[1] * 3];
+    // this.room_location = [(this.c.width/10)/2 - (this.room_size[0]/2) - 1,
+    //                       (this.c.height/10)/2 - 5 - (this.room_size[1]/2)]
     // player and monster location info
     this.player_location = this.get_random_start_location();
     this.monster_location = this.get_random_start_location();
@@ -32,8 +36,9 @@ var Battle = function(c, ctx, room, monster, level) {
 
 Battle.prototype.get_random_start_location = function() {
     // get random x, get random y
-    var x = getRandomInt(this.room_location[0] + 1, this.room_location[0] + this.room_size[0] - 1);
-    var y = getRandomInt(this.room_location[1] + 1, this.room_location[1] + this.room_size[1] - 1);
+    var room = this.battle_room
+    var x = getRandomInt(room.location[0] + 1, room.location[0] + room.size[0] - 1);
+    var y = getRandomInt(room.location[1] + 1, room.location[1] + room.size[1] - 1);
 
     // monster_location must be defined after player
     if (("player_location" in this) && (this.player_location[0] == x) && (this.player_location[1] == y)) {
@@ -63,7 +68,7 @@ Battle.prototype.move_menu_down = function() {
 }
 
 Battle.prototype.move_direction_right = function() {
-    if (this.menu.draw_direction) {
+    if ("direction" in this.menu) {
         if (this.menu.direction == NORTH) {
             this.menu.direction = EAST;
         }
@@ -80,7 +85,7 @@ Battle.prototype.move_direction_right = function() {
 }
 
 Battle.prototype.move_direction_left = function() {
-    if (this.menu.draw_direction) {
+    if ("direction" in this.menu) {
         if (this.menu.direction == NORTH) {
             this.menu.direction = WEST;
         }
@@ -99,16 +104,28 @@ Battle.prototype.move_direction_left = function() {
 Battle.prototype.move_player = function() {
     if (this.menu.direction == NORTH) {
         // check if wall
-        this.player_location = potential_north(this.player_location);
+        var loc = potential_north(this.player_location);
+        if (!this.battle_room.is_wall(loc)) {
+            this.player_location = loc;
+        }
     }
     else if (this.menu.direction == EAST) {
-        this.player_location = potential_east(this.player_location);
+        var loc = potential_east(this.player_location);
+        if (!this.battle_room.is_wall(loc)) {
+            this.player_location = loc;
+        }
     }
     else if (this.menu.direction == WEST) {
-        this.player_location = potential_west(this.player_location);
+        var loc = potential_west(this.player_location);
+        if (!this.battle_room.is_wall(loc)) {
+            this.player_location = loc;
+        }
     }
     else if (this.menu.direction == SOUTH) {
-        this.player_location = potential_south(this.player_location);
+        var loc = potential_south(this.player_location);
+        if (!this.battle_room.is_wall(loc)) {
+            this.player_location = loc;
+        }
     }
 }
 
@@ -124,8 +141,8 @@ Battle.prototype.activate_menu_item = function() {
             case FLEE:
                 this.change_menu(BATTLE_FLEE_MENU);
                 break;
-            case MELEE:
-                this.change_menu(BATTLE_MELEE_MENU);
+            case PHYSICAL:
+                this.change_menu(BATTLE_PHYSICAL_MENU);
                 break;
             case INVENTORY:
                 this.change_menu(BATTLE_INVENTORY_MENU);
@@ -136,16 +153,42 @@ Battle.prototype.activate_menu_item = function() {
         switch(this.menu.options[this.selected]) {
             case MOVE:
                 this.move_player(this.menu.direction);
+                this.change_menu(MAIN_BATTLE_OPTIONS);
+                this.trigger_monster_move();
                 break;
             case BACK:
                 this.change_menu(MAIN_BATTLE_OPTIONS);
                 break;
         }
     }
-    else if (this.menu == BATTLE_MELEE_MENU) {
+    else if (this.menu == BATTLE_PHYSICAL_MENU) {
         switch(this.menu.options[this.selected]) {
+            case MELEE:
+                this.change_menu(PHYSICAL_MELEE_MENU);
+                break;
+            case RANGED:
+                this.change_menu(PHYSICAL_RANGED_MENU);
+                break;
             case BACK:
                 this.change_menu(MAIN_BATTLE_OPTIONS);
+                break;
+        }
+    }
+    else if (this.menu == PHYSICAL_MELEE_MENU) {
+        switch (this.menu.options[this.selected]) {
+            case ATTACK:
+                break;
+            case BACK:
+                this.change_menu(BATTLE_PHYSICAL_MENU)
+                break;
+        }
+    }
+    else if (this.menu == PHYSICAL_RANGED_MENU) {
+        switch (this.menu.options[this.selected]) {
+            case ATTACK:
+                break;
+            case BACK:
+                this.change_menu(BATTLE_PHYSICAL_MENU)
                 break;
         }
     }
@@ -172,6 +215,11 @@ Battle.prototype.activate_menu_item = function() {
                 this.leave_battle();
         }
     }
+}
+
+Battle.prototype.trigger_monster_move = function() {
+    // attack or move
+
 }
 
 Battle.prototype.change_menu = function(menu) {
@@ -256,7 +304,7 @@ Battle.prototype._draw_ui = function() {
 
 Battle.prototype._draw_menu = function() {
     this.ctx.font = BATTLE_MENU_FONT;
-    var args = convert_grid_location_into_filltext_args(5, 12);
+    var args = convert_grid_location_into_filltext_args(3, 12);
     this.ctx.fillText(this.menu.text, args[0], args[1]);
     for (var i = 0; i < this.menu.options.length; i++) {
         if (i == this.selected) {
@@ -282,17 +330,17 @@ Battle.prototype._draw_zoomed_room = function() {
     // 20 menu, 20 monster info, 40 map
     // max X here = 40; max room size X = 12; 12 * 3 = 36
     // max Y here = 30; max room size y = 6;  6 * 3 = 18;
-    
-    for (var i = this.room_location[0]; i < this.room_location[0] + this.room_size[0] + 2; i += 1) {
-        var args = convert_grid_location_into_filltext_args(i, this.room_location[1]);
+    var room = this.battle_room;
+    for (var i = room.location[0]; i < room.location[0] + room.size[0] + 2; i += 1) {
+        var args = convert_grid_location_into_filltext_args(i, room.location[1]);
         this.ctx.fillText('-', args[0], args[1]);
-        args = convert_grid_location_into_filltext_args(i, this.room_location[1] + this.room_size[1] + 1);
+        args = convert_grid_location_into_filltext_args(i, room.location[1] + room.size[1] + 1);
         this.ctx.fillText('-', args[0], args[1]);
     }
-    for (i = this.room_location[1] + 1; i < this.room_location[1] + this.room_size[1] + 1; i += 1) {
-        var args = convert_grid_location_into_filltext_args(this.room_location[0], i);
+    for (i = room.location[1] + 1; i < room.location[1] + room.size[1] + 1; i += 1) {
+        var args = convert_grid_location_into_filltext_args(room.location[0], i);
         this.ctx.fillText('I', args[0], args[1]);
-        args = convert_grid_location_into_filltext_args(this.room_location[0] + this.room_size[0] + 1, i);
+        args = convert_grid_location_into_filltext_args(room.location[0] + room.size[0] + 1, i);
         this.ctx.fillText('I', args[0], args[1]);
     }
 }
@@ -319,30 +367,169 @@ Battle.prototype._draw_agents_on_map = function() {
                                                         this.player_location[1]);
     this.ctx.fillText('H', args[0], args[1]);
     // draw the direction facing if necessary
-    if (this.menu.draw_direction) {
-        var loc = [];
-        if (this.menu.direction == NORTH) {
-            loc = potential_north(this.player_location);
-            args = convert_grid_location_into_filltext_args(loc[0], loc[1]);
-            this.ctx.fillText('^', args[0], args[1]);
-        }
-        else if (this.menu.direction == WEST) {
-            loc = potential_west(this.player_location);
-            args = convert_grid_location_into_filltext_args(loc[0], loc[1]);
-            this.ctx.fillText('<', args[0], args[1]);
-        }
-        else if (this.menu.direction == EAST) {
-            loc = potential_east(this.player_location);
-            args = convert_grid_location_into_filltext_args(loc[0], loc[1]);
-            this.ctx.fillText('>', args[0], args[1]);
-        }
-        else if (this.menu.direction == SOUTH) {
-            loc = potential_south(this.player_location);
-            args = convert_grid_location_into_filltext_args(loc[0], loc[1]);
-            this.ctx.fillText('v', args[0], args[1]);
-        }
+    if ("draw_direction" in this.menu) {
+        this._draw_direction_icon();
+    }
+    else if ("draw_ranged" in this.menu) {
+        this._draw_weapon_ranged();
+    }
+    else if ("draw_melee" in this.menu) {
+        this._draw_weapon_melee();
     }
     args = convert_grid_location_into_filltext_args(this.monster_location[0],
                                                     this.monster_location[1]);
     this.ctx.fillText('M', args[0], args[1]);
+}
+
+Battle.prototype._draw_weapon_ranged = function() {
+    var range = this.level.player.get_equipped_ranged_weapon().range;
+    var loc = [];
+    var args = [];
+
+    for (var i = 1; i < range; i++) {
+        if (this.menu.direction == NORTH) {
+            loc = [this.player_location[0], this.player_location[1] - i];
+            if (this.battle_room.is_wall(loc)) {
+                break;
+            }
+            args = convert_grid_location_into_filltext_args(loc[0], loc[1]);
+            this.ctx.fillText('x', args[0], args[1]);
+            
+        }
+        else if (this.menu.direction == WEST) {
+            loc = [this.player_location[0] - i, this.player_location[1]];
+            if (this.battle_room.is_wall(loc)) {
+                break;
+            }
+            args = convert_grid_location_into_filltext_args(loc[0], loc[1]);
+            this.ctx.fillText('x', args[0], args[1]);
+        }
+        else if (this.menu.direction == EAST) {
+            loc = [this.player_location[0] + i, this.player_location[1]];
+            if (this.battle_room.is_wall(loc)) {
+                break;
+            }
+            args = convert_grid_location_into_filltext_args(loc[0], loc[1]);
+            this.ctx.fillText('x', args[0], args[1]);
+        }
+        else if (this.menu.direction == SOUTH) {
+            loc = [this.player_location[0], this.player_location[1] + i];
+            if (this.battle_room.is_wall(loc)) {
+                break;
+            }
+            args = convert_grid_location_into_filltext_args(loc[0], loc[1]);
+            this.ctx.fillText('x', args[0], args[1]);
+        }
+    }
+}
+
+Battle.prototype._draw_direction_icon = function() {
+    var loc = [];
+    if (this.menu.direction == NORTH) {
+        loc = potential_north(this.player_location);
+        if (!this.battle_room.is_wall(loc)) {
+            args = convert_grid_location_into_filltext_args(loc[0], loc[1]);
+            this.ctx.fillText('^', args[0], args[1]);
+        }
+    }
+    else if (this.menu.direction == WEST) {
+        loc = potential_west(this.player_location);
+        if (!this.battle_room.is_wall(loc)) {
+            args = convert_grid_location_into_filltext_args(loc[0], loc[1]);
+            this.ctx.fillText('<', args[0], args[1]);
+        }
+    }
+    else if (this.menu.direction == EAST) {
+        loc = potential_east(this.player_location);
+        if (!this.battle_room.is_wall(loc)) {
+            args = convert_grid_location_into_filltext_args(loc[0], loc[1]);
+            this.ctx.fillText('>', args[0], args[1]);
+        }
+    }
+    else if (this.menu.direction == SOUTH) {
+        loc = potential_south(this.player_location);
+        if (!this.battle_room.is_wall(loc)) {
+            args = convert_grid_location_into_filltext_args(loc[0], loc[1]);
+            this.ctx.fillText('v', args[0], args[1]);
+        }
+    }
+}
+
+Battle.prototype._draw_weapon_melee = function() {
+    // range in all cardinals, range - 1 in diagonals
+    var range = this.level.player.get_equipped_melee_weapon().range;
+    var loc = [];
+    var args = [];
+    // EAST
+    for (var i = this.player_location[0] + 1; i <= this.player_location[0] + range; i++) {
+        loc = [i, this.player_location[1]];
+        if (this.battle_room.is_wall(loc)) {
+            break;
+        }
+        args = convert_grid_location_into_filltext_args(loc[0], loc[1]);
+        this.ctx.fillText('x', args[0], args[1]);
+    }
+    // WEST
+    for (var i = this.player_location[0] - 1; i >= this.player_location[0] - range; i--) {
+        loc = [i, this.player_location[1]];
+        if (this.battle_room.is_wall(loc)) {
+            break;
+        }
+        args = convert_grid_location_into_filltext_args(loc[0], loc[1]);
+        this.ctx.fillText('x', args[0], args[1]);
+    }
+    // NORTH
+    for (var i = this.player_location[1] - 1; i >= this.player_location[1] - range; i--) {
+        loc = [this.player_location[0], i];
+        if (this.battle_room.is_wall(loc)) {
+            break;
+        }
+        args = convert_grid_location_into_filltext_args(loc[0], loc[1]);
+        this.ctx.fillText('x', args[0], args[1]);
+    }
+    // SOUTH
+    for (var i = this.player_location[1] + 1; i <= this.player_location[1] + range; i++) {
+        loc = [this.player_location[0], i];
+        if (this.battle_room.is_wall(loc)) {
+            break;
+        }
+        args = convert_grid_location_into_filltext_args(loc[0], loc[1]);
+        this.ctx.fillText('x', args[0], args[1]);
+    }
+    // SEAST
+    for (var i = 1; i < range; i++) {
+        loc = [this.player_location[0] + i, this.player_location[1] + i];
+        if (this.battle_room.is_wall(loc)) {
+            break;
+        }
+        args = convert_grid_location_into_filltext_args(loc[0], loc[1]);
+        this.ctx.fillText('x', args[0], args[1]);        
+    }
+    // SWEST
+    for (var i = 1; i < range; i++) {
+        loc = [this.player_location[0] - i, this.player_location[1] + i];
+        if (this.battle_room.is_wall(loc)) {
+            break;
+        }
+        args = convert_grid_location_into_filltext_args(loc[0], loc[1]);
+        this.ctx.fillText('x', args[0], args[1]);        
+    }
+    // NEAST
+    for (var i = 1; i < range; i++) {
+        loc = [this.player_location[0] + i, this.player_location[1] - i];
+        if (this.battle_room.is_wall(loc)) {
+            break;
+        }
+        args = convert_grid_location_into_filltext_args(loc[0], loc[1]);
+        this.ctx.fillText('x', args[0], args[1]);        
+    }
+    // NWEST
+    for (var i = 1; i < range; i++) {
+        loc = [this.player_location[0] - i, this.player_location[1] - i];
+        if (this.battle_room.is_wall(loc)) {
+            break;
+        }
+        args = convert_grid_location_into_filltext_args(loc[0], loc[1]);
+        this.ctx.fillText('x', args[0], args[1]);        
+    }
 }
