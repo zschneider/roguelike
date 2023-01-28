@@ -12,29 +12,31 @@ var BRANCH_4 = [100, 100, 100, 100];
 var DOOR_PROBS = [BRANCH_0, BRANCH_1, BRANCH_2, BRANCH_3, BRANCH_4];
 
 // STRING CONSTANTS
-var NORTH = 'N';
-var SOUTH = 'S';
-var EAST = 'E';
-var WEST = 'W';
+var NORTH = "N";
+var SOUTH = "S";
+var EAST = "E";
+var WEST = "W";
 
 // GRID DIMENSIONS
 var HOLDER_SIZE_X = 14;
 var HOLDER_SIZE_Y = 8;
-var GRID_DIMENSIONS = new Array(5*5);
+var GRID_DIMENSIONS = new Array(5 * 5);
 var BUFFER = 5;
 // generate the dimensions for every grid location
 for (var x = 0; x < 5; x++) {
-    for (var y = 0; y < 5; y++) {
-        GRID_DIMENSIONS[x + (y * BUFFER)] = [BUFFER + (x * HOLDER_SIZE_X), BUFFER + (y * HOLDER_SIZE_Y)];
-    }
+  for (var y = 0; y < 5; y++) {
+    GRID_DIMENSIONS[x + y * BUFFER] = [
+      BUFFER + x * HOLDER_SIZE_X,
+      BUFFER + y * HOLDER_SIZE_Y,
+    ];
+  }
 }
 
 // ROOM SETTINGS
 var MIN_ROOM_X = 3;
-var MAX_ROOM_X = HOLDER_SIZE_X-2;
+var MAX_ROOM_X = HOLDER_SIZE_X - 2;
 var MIN_ROOM_Y = 3;
-var MAX_ROOM_Y = HOLDER_SIZE_Y-2;
-
+var MAX_ROOM_Y = HOLDER_SIZE_Y - 2;
 
 // Monster Constants
 // BAT, TROLL, GOBLIN, EVIL WIZARD
@@ -47,20 +49,20 @@ var MONSTER_PROBS = [20, 50, 90, 100];
 var MONSTER_TYPES = [BAT, TROLL, GOBLIN, E_WIZARD];
 
 // Debug
-var DEBUG_SPAWN_MONSTERS = true;
-var DEBUG_SHOW_ALL_ROOMS = false;
-var DEBUG_SHOW_ROOM_INFO= false;
+var DEBUG_SPAWN_MONSTERS = false;
+var DEBUG_SHOW_ALL_ROOMS = true;
+var DEBUG_SHOW_ROOM_INFO = false;
 
-var BATTLE_TEXT = 
-"                              (            ____ \n" +
-"   (     (       *   )  *   ) )\\ )        |   / \n" +
-" ( )\\    )\\    ` )  /(` )  /((()/(  (     |  /  \n" +
-" )((_)((((_)(   ( )(_))( )(_))/(_)) )\\    | /   \n" +
-"((_)_  )\\ _ )\\ (_(_())(_(_())(_))  ((_)   |/    \n" +
-" | _ ) (_)_\\(_)|_   _||_   _|| |   | __|  /     \n" +
-" | _ \\  / _ \\    | |    | |  | |__ | _|  /\\     \n" +
-" |___/ /_/ \\_\\   |_|    |_|  |____||___|(_)    \n";
-// var BATTLE_TEXT = 
+var BATTLE_TEXT =
+  "                              (            ____ \n" +
+  "   (     (       *   )  *   ) )\\ )        |   / \n" +
+  " ( )\\    )\\    ` )  /(` )  /((()/(  (     |  /  \n" +
+  " )((_)((((_)(   ( )(_))( )(_))/(_)) )\\    | /   \n" +
+  "((_)_  )\\ _ )\\ (_(_())(_(_())(_))  ((_)   |/    \n" +
+  " | _ ) (_)_\\(_)|_   _||_   _|| |   | __|  /     \n" +
+  " | _ \\  / _ \\    | |    | |  | |__ | _|  /\\     \n" +
+  " |___/ /_/ \\_\\   |_|    |_|  |____||___|(_)    \n";
+// var BATTLE_TEXT =
 // "  ____        _   _   _      _  \n" +
 // " | __ )  __ _| |_| |_| | ___| | \n" +
 // " |  _ \\ / _` | __| __| |/ _ \\ | \n" +
@@ -79,15 +81,15 @@ var BACK = "Back";
 var YES = "Yes";
 
 var MAIN_BATTLE_OPTIONS = {
-    text: "Battle Options",
-    options: [MOVE, FLEE, PHYSICAL, MAGIC, INVENTORY],
+  text: "Battle Options",
+  options: [MOVE, FLEE, PHYSICAL, MAGIC, INVENTORY],
 };
 
 var BATTLE_MOVE_MENU = {
-    text: "Direction?",
-    options: [MOVE, BACK],
-    draw_direction: true,
-    direction: NORTH,
+  text: "Direction?",
+  options: [MOVE, BACK],
+  draw_direction: true,
+  direction: NORTH,
 };
 
 // PHYISCAL ATTACK MENU AND SUBMENUS
@@ -96,39 +98,37 @@ var MELEE = "Melee";
 var ATTACK = "Attack";
 
 var BATTLE_PHYSICAL_MENU = {
-    text: "Physical",
-    options: [MELEE, RANGED, BACK],
+  text: "Physical",
+  options: [MELEE, RANGED, BACK],
 };
 
 var PHYSICAL_RANGED_MENU = {
-    text: "Ranged Attack",
-    options: [ATTACK, BACK],
-    draw_ranged: true,
-    direction: NORTH,
+  text: "Ranged Attack",
+  options: [ATTACK, BACK],
+  draw_ranged: true,
+  direction: NORTH,
 };
 
 var PHYSICAL_MELEE_MENU = {
-    text: "Melee Attack",
-    options: [ATTACK, BACK],
-    draw_melee: true,
+  text: "Melee Attack",
+  options: [ATTACK, BACK],
+  draw_melee: true,
 };
 
 var BATTLE_MAGIC_MENU = {
-    text: "Magic",
-    options: [BACK],
+  text: "Magic",
+  options: [BACK],
 };
 
 var BATTLE_FLEE_MENU = {
-    text: "Are you sure?",
-    options: [YES, BACK],
+  text: "Are you sure?",
+  options: [YES, BACK],
 };
 
 var BATTLE_INVENTORY_MENU = {
-    text: "Inventory",
-    options: [BACK],
+  text: "Inventory",
+  options: [BACK],
 };
 
 var GAME_FONT = "10px Courier";
 var BATTLE_MENU_FONT = "16px Courier";
-
-                                                
